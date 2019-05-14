@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', startGame)
 var board = {
   cells: [
       { row: 0, col: 0, isMine: false, hidden: true },
-      { row: 0, col: 1, isMine: false, hidden: true }, 
+      { row: 0, col: 1, isMine: true, hidden: true }, 
       { row: 0, col: 2, isMine: false, hidden: true }, 
       { row: 0, col: 3, isMine: false, hidden: true },
       { row: 1, col: 0, isMine: false, hidden: true }, 
@@ -14,11 +14,11 @@ var board = {
       { row: 2, col: 0, isMine: false, hidden: true }, 
       { row: 2, col: 1, isMine: false, hidden: true }, 
       { row: 2, col: 2, isMine: false, hidden: true }, 
-      { row: 2, col: 3, isMine: false, hidden: true },
+      { row: 2, col: 3, isMine: true, hidden: true },
       { row: 3, col: 0, isMine: false, hidden: true }, 
       { row: 3, col: 1, isMine: false, hidden: true }, 
       { row: 3, col: 2, isMine: false, hidden: true }, 
-      { row: 3, col: 3, isMine: false, hidden: true }
+      { row: 3, col: 3, isMine: true, hidden: true }
   ]
 }
 
@@ -27,9 +27,11 @@ function startGame () {
     for(i = 0; i < board.cells.length; i++){
       // we need a var to put into our countSurroundingMines function
     board.cells[i].surroundingMines = countSurroundingMines(board.cells[i])
-    
+    // we need to add an event listener to this function to call check for win 
   }
   lib.initBoard()
+  document.addEventListener("click", checkForWin)
+  document.addEventListener("contextmenu", checkForWin)
 }
 
 // Define this function to look for a win condition:
@@ -37,6 +39,15 @@ function startGame () {
 // 1. Are all of the cells that are NOT mines visible?
 // 2. Are all of the mines marked?
 function checkForWin () {
+  var hasWon = 0
+  for(i = 0; i < board.cells.length; i++){
+    if(board.cells[i].isMine && board.cells[i].isMarked || board.cells[i].isMine == false && board.cells[i].hidden == false){
+      hasWon++
+    }
+    if(hasWon == board.cells.length){
+      lib.displayMessage('You win!')
+    }
+  }
 
   // You can use this function call to declare a winner (once you've
   // detected that they've won, that is!)
